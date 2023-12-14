@@ -7,16 +7,16 @@ const userList = [];
 // Function to create a new user
 export const createUser = async (userData) => {
   try {
-    // For temporary storage in a JavaScript list
-    userList.push(userData);
+    const userId = `USER-${userList.length + 1}`;
 
-    // For future use with MongoDB
-    /* const user = new UserModel(userData);
-    const savedUser = await user.save();
-    return savedUser; */
+    // Create a new procedure object with the generated ID
+    const newUser = {
+      ...userData,
+      id: userId,
+    };
 
-    // Returning the user data for immediate use
-    return userData;
+    userList.push(newUser);
+    return newUser;
   } catch (error) {
     throw error; // Handle the error as per your application's needs
   }

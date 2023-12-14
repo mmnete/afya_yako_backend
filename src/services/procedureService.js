@@ -8,6 +8,15 @@ const procedureList = [];
 // Function to create a new procedure
 export const createProcedure = async (procedureData) => {
   try {
+    // Generate a procedure ID based on the index of the procedure
+    const procedureId = `PROC-${procedureList.length + 1}`;
+
+    // Create a new procedure object with the generated ID
+    const newProcedure = {
+      ...procedureData,
+      id: procedureId,
+    };
+
     // Extract patient details from procedureData
     const { patient: patientData, ...rest } = procedureData;
 
@@ -21,17 +30,17 @@ export const createProcedure = async (procedureData) => {
       }
 
       // Use the existing patient's details
-      procedureData.patient = { ...patient, id: patientData.id };
+      newProcedure.patient = { ...patient, id: patientData.id };
     } else {
       // Create a new patient
       const newPatient = await createUser(patientData);
 
       // Use the details of the newly created patient
-      procedureData.patient = { ...newPatient, id: newPatient.id };
+      newProcedure.patient = { ...newPatient, id: newPatient.id };
     }
 
     // For temporary storage in a JavaScript list
-    procedureList.push(procedureData);
+    procedureList.push(newProcedure);
 
     // For future use with MongoDB
     /* const procedure = new ProcedureModel(procedureData);
@@ -39,7 +48,7 @@ export const createProcedure = async (procedureData) => {
     return savedProcedure; */
 
     // Returning the procedure data for immediate use
-    return procedureData;
+    return newProcedure;
   } catch (error) {
     throw error; // Handle the error as per your application's needs
   }
@@ -59,5 +68,49 @@ export const getProcedureById = async (procedureId) => {
     throw error;
   }
 };
+
+
+export const getProcedureList = async () => {
+    try {
+        return procedureList;
+      } catch (error) {
+        throw error;
+      }
+}
+
+export const updateProcedure = async (procedureId, updatedValue) => {
+
+    try {
+        // For future use with MongoDB
+        // const procedure = await ProcedureModel.findById(procedureId);
+    
+        // For temporary use with the JavaScript list
+        procedureList = procedureList.map((value) => {
+            if (value.id === procedureId) {
+                return updatedValue;
+            }
+            return value;
+        });
+    
+        return updatedValue;
+      } catch (error) {
+        throw error;
+      }  
+
+};
+
+export const deleteProcedure = async (procedureId) => {
+    try {
+      // For future use with MongoDB
+      // const procedure = await ProcedureModel.findById(procedureId);
+  
+      // For temporary use with the JavaScript list
+      procedureList = procedureList.filter(value => value.id !== procedureId);
+  
+      return 'done';
+    } catch (error) {
+      throw error;
+    }
+  };
 
 // Add more functions as needed (update, delete, find by patient ID, etc.)
