@@ -1,7 +1,7 @@
 // procedureService.js
 
 // import ProcedureModel from '../models/procedureModel'; // Adjust the path as needed
-import { createUser } from './userService.js'; // Adjust the path as needed
+import { createPatient, getPatientById } from './patientService.js'; // Adjust the path as needed
 
 const procedureList = [];
 
@@ -10,11 +10,20 @@ export const createProcedure = async (procedureData) => {
   try {
     // Generate a procedure ID based on the index of the procedure
     const procedureId = `PROC-${procedureList.length + 1}`;
+     // Fetch a random user from the API
+     const fakeDoctorResponse = await fetch('https://randomuser.me/api/');
+     const fakeDoctor = await fakeDoctorResponse.json();
+     // Extract the doctor's name from the response
+     const doctorName = `${fakeDoctor.results[0].name.first} ${fakeDoctor.results[0].name.last}`;
 
     // Create a new procedure object with the generated ID
     const newProcedure = {
       ...procedureData,
+      createdAt: new Date(),
+      personnel: doctorName,
       id: procedureId,
+      room: 'Room 1',
+      status: 'pending',
     };
 
     // Extract patient details from procedureData
@@ -23,7 +32,7 @@ export const createProcedure = async (procedureData) => {
     // Check if patient ID is provided
     if (patientData.id) {
       // Use existing patient
-      const patient = await getUserById(patientData.id);
+      const patient = await getPatientById(patientData.id);
 
       if (!patient) {
         throw new Error('Patient not found');
@@ -33,7 +42,7 @@ export const createProcedure = async (procedureData) => {
       newProcedure.patient = { ...patient, id: patientData.id };
     } else {
       // Create a new patient
-      const newPatient = await createUser(patientData);
+      const newPatient = await createPatient(patientData);
 
       // Use the details of the newly created patient
       newProcedure.patient = { ...newPatient, id: newPatient.id };

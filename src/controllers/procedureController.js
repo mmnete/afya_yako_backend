@@ -38,7 +38,7 @@ export const getProcedureListController = async () => {
   try {
     const procedures = await getProcedureList();
 
-    return res.status(200).json(procedures);
+    return procedures;
   } catch (error) {
     console.error(error);
     throw error;

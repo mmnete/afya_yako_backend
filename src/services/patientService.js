@@ -1,37 +1,35 @@
-// userService.js
-
 // import UserModel from '../models/userModel'; 
 
-const userList = [];
+const patientList = [];
 
 // Function to create a new user
-export const createUser = async (userData) => {
+export const createPatient = async (patientData) => {
   try {
-    const userId = `USER-${userList.length + 1}`;
+    const patientId = `USER-${patientList.length + 1}`;
 
     // Create a new procedure object with the generated ID
-    const newUser = {
-      ...userData,
-      id: userId,
+    const newPatient = {
+      ...patientData,
+      id: patientId,
     };
 
-    userList.push(newUser);
-    return newUser;
+    patientList.push(newPatient);
+    return newPatient;
   } catch (error) {
     throw error; // Handle the error as per your application's needs
   }
 };
 
 // Function to get a user by ID
-export const getUserById = async (userId) => {
+export const getPatientById = async (id) => {
   try {
     // For future use with MongoDB
     // const user = await UserModel.findById(userId);
 
     // For temporary use with the JavaScript list
-    const user = userList.find((u) => u.id === userId);
+    const patient = patientList.find((u) => u.id === id);
 
-    return user;
+    return patient;
   } catch (error) {
     throw error;
   }
